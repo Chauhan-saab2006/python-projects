@@ -26,7 +26,7 @@ MODEL = "models/gemini-2.0-flash-exp"
 DEFAULT_MODE = "camera"
 
 # Google Gemini Client:
-client = genai.Client(http_options={"api_version": "v1alpha"}, api_key="AIzaSyD_E8mcnGagr9GFxWvpPLuf8K6YknCQvvE")
+client = genai.Client(http_options={"api_version": "v1alpha"}, api_key="AIzaSyD5tyymvZOSG7stfLK-2i9EU0p1MY0_uPc")
 
 
 # While Gemini 2.0 Flash is in experimental preview mode, only one of AUDIO or
