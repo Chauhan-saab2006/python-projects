@@ -12,11 +12,11 @@ This project is a Python-based application developed to [briefly describe the pu
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/Chauhan-saab2006/python-projects.git
    ```
 2. Navigate to the project directory:
    ```
-   cd your-repo-name
+   cd Python Project
    ```
 3. (Optional) Create and activate a virtual environment:
    ```

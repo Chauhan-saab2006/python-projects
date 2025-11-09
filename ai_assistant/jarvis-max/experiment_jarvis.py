@@ -1,5 +1,3 @@
-from google import genai
-from google.genai import types
 import google.generativeai as genai
 import speech_recognition as sr    
 import webbrowser
@@ -9,7 +7,7 @@ import pyperclip
 import subprocess
 import datetime
 import time
-import numpy as np
+# import numpy as np
 import threading
 import requests 
 import asyncio
@@ -34,7 +32,7 @@ recognizer = sr.Recognizer()
 engine = pyttsx3.init()
 
 
-API_KEY = "AIzaSyD_E8mcnGagr9GFxWvpPLuf8K6YknCQvvE"
+API_KEY = "AIzaSyD5tyymvZOSG7stfLK-2i9EU0p1MY0_uPc"
 genai.configure(api_key=API_KEY)
 
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
@@ -100,9 +98,12 @@ def tell_time():
     print(f"Sir, the time is {hour} {minute} {am_pm}") 
     speak(f"Sir, the time is {hour} {minute} {am_pm}") 
 
-def exit():
-    pyautogui.click (x=1881, y=21)         # Adjust coordinates for your screen resolution
-    time.sleep(3) 
+def close_current_window():
+    try:
+        pyautogui.hotkey('alt', 'f4')  # More reliable way to close windows
+        time.sleep(1)
+    except Exception as e:
+        print(f"Error closing window: {e}") 
     
 def play_music():
     """Play music on YouTube."""
@@ -111,8 +112,7 @@ def play_music():
     if song_name:
         speak(f"Playing {song_name} on YouTube.")
         webbrowser.open(f"https://www.youtube.com/results?search_query={song_name}")
-        time.sleep(5)
-        pyautogui.click(x=282, y=533)  # Adjust coordinates for your screen resolution
+        speak("YouTube opened with your song search. Please click on the video you want to play.")
 
 def send_message():
     """Send a message on WhatsApp."""
@@ -122,23 +122,10 @@ def send_message():
         speak("Please tell me the name of the contact.")
         contact = takeCommand()
         if contact:
-            speak(f"Sending message to {contact}.")
+            speak(f"Opening WhatsApp Web for {contact}. Please complete the message manually.")
             webbrowser.open("https://web.whatsapp.com/")
-            time.sleep(10)  # Wait for WhatsApp Web to load
-            pyperclip.copy(message)
-            pyautogui.click(x=239, y=313)  # Adjust coordinates for the search bar
-            time.sleep(3)
-            pyautogui.write(contact)
-            time.sleep(5)
-            pyautogui.press("enter")
-            time.sleep(2)
-            pyautogui.click(x=1086, y=965)  # Adjust coordinates for the message box
-            pyautogui.hotkey("ctrl", "v")
-            time.sleep(2)
-            pyautogui.press("enter")
-            speak("Message sent successfully.")
-       
-            speak("Message sent successfully.")
+            pyperclip.copy(f"Contact: {contact}\nMessage: {message}")
+            speak("Contact and message copied to clipboard. Please paste and send manually.")
 
 def open_chrome(chrome):
     """
@@ -213,8 +200,8 @@ if __name__ == '__main__':
             send_message()
             
         elif "close" in query:
-            exit()
-            speak("exiting the site")    
+            close_current_window()
+            speak("closing the current window")    
        
         elif "jarvis shutdown" in query:
             speak("Goodbye, sir. Have a great day!")

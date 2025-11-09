@@ -1,8 +1,8 @@
 import pyttsx3
 import io
 import mss
-from google import genai
-from google.genai import types
+import google.generativeai as genai
+from google.generativeai import types
 import base64
 import asyncio
 import traceback
@@ -25,8 +25,9 @@ CHUNK_SIZE = 1024
 MODEL = "models/gemini-2.0-flash-exp"
 DEFAULT_MODE = "camera"
 
-# Google Gemini Client:
-client = genai.Client(http_options={"api_version": "v1alpha"}, api_key="AIzaSyD5tyymvZOSG7stfLK-2i9EU0p1MY0_uPc")
+# Configure Gemini API
+genai.configure(api_key="AIzaSyD5tyymvZOSG7stfLK-2i9EU0p1MY0_uPc")
+client = genai.Client(http_options={"api_version": "v1alpha"})
 
 
 # While Gemini 2.0 Flash is in experimental preview mode, only one of AUDIO or

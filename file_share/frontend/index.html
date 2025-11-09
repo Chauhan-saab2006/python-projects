@@ -413,13 +413,13 @@
             <p>Share files between devices on your local network</p>
             <div class="network-info">
                 <strong>Access from other devices:</strong><br>
-                Open browser and go to: <strong>http://{{ local_ip }}:{{ port }}</strong>
+                Open browser and go to: <strong>{{ local_ip }}:{{ port }}</strong>
             </div>
             <div class="header-actions">
                 <button class="btn-change-password" onclick="showChangePasswordModal()">
                     🔑 Change Password
                 </button>
-                <form method="POST" action="/logout" style="display: inline;">
+                <form id="logoutForm" method="POST" action="/logout" style="display: inline;">
                     <button type="submit" class="btn-logout">🚪 Logout</button>
                 </form>
             </div>
@@ -445,34 +445,60 @@
         <div class="files-section">
             <h2>📋 Shared Files</h2>
             <div id="fileList" class="file-list">
-                {% if files %}
-                {% for file in files %}
-                <div class="file-item" data-filename="{{ file.name }}">
-                    <div class="file-info">
-                        <div class="file-name">{{ file.name }}</div>
-                        <div class="file-details">
-                            {{ file.size_formatted }} • Uploaded: {{ file.uploaded[:10] }}
-                        </div>
-                    </div>
-                    <div class="file-actions">
-                        <button class="btn-download" onclick="downloadFile('{{ file.name }}')">
-                            Download
-                        </button>
-                        <button class="btn-delete" onclick="deleteFile('{{ file.name }}')">
-                            Delete
-                        </button>
-                    </div>
-                </div>
-                {% endfor %}
-                {% else %}
                 <div class="empty-state">
                     <div class="empty-state-icon">📭</div>
-                    <p>No files shared yet. Upload a file to get started!</p>
+                    <p>Loading files...</p>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>
+
+    <script>
+        // Load file list on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            loadFileList();
+        });
+
+        function loadFileList() {
+            fetch(backendUrl + '/api/files')
+                .then(response => response.json())
+                .then(files => {
+                    const fileList = document.getElementById('fileList');
+                    if (files.length === 0) {
+                        fileList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p>No files uploaded yet</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    fileList.innerHTML = files.map(file => `
+                        <div class="file-item" data-filename="${file.name}">
+                            <div class="file-info">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-details">${file.size_formatted} • Uploaded ${new Date(file.uploaded).toLocaleDateString()}</div>
+                            </div>
+                            <div class="file-actions">
+                                <button class="btn-download" onclick="downloadFile('${file.name}')">📥 Download</button>
+                                <button class="btn-delete" onclick="deleteFile('${file.name}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading file list:', error);
+                    const fileList = document.getElementById('fileList');
+                    fileList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⚠️</div>
+                            <p>Failed to load files</p>
+                        </div>
+                    `;
+                });
+        }
+    </script>
 
     <!-- Change Password Modal -->
     <div id="changePasswordModal" class="modal">
@@ -502,12 +528,16 @@
     </div>
 
     <script>
+        const backendUrl = window.location.origin; // Use the current origin for local network access
         const uploadArea = document.getElementById('uploadArea');
+
+        // Set logout form action dynamically
+        document.getElementById('logoutForm').action = backendUrl + '/logout';
         const fileInput = document.getElementById('fileInput');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
         const messageDiv = document.getElementById('message');
-        const csrfToken = '{{ csrf_token }}';
+        let csrfToken = '{{ csrf_token }}'; // CSRF token from backend
 
         // Drag and drop handlers
         uploadArea.addEventListener('dragover', (e) => {
@@ -568,9 +598,7 @@
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     showMessage('File uploaded successfully: ' + response.filename, 'success');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
+                    loadFileList(); // Refresh file list after upload
                 } else {
                     const response = JSON.parse(xhr.responseText);
                     showMessage('Upload failed: ' + (response.error || 'Unknown error'), 'error');
@@ -583,12 +611,12 @@
                 showMessage('Upload failed: Network error', 'error');
             });
 
-            xhr.open('POST', '/upload');
+            xhr.open('POST', backendUrl + '/upload');
             xhr.send(formData);
         }
 
         function downloadFile(filename) {
-            window.location.href = '/download/' + encodeURIComponent(filename);
+            window.location.href = backendUrl + '/download/' + encodeURIComponent(filename);
         }
 
         function deleteFile(filename) {
@@ -596,7 +624,7 @@
                 return;
             }
 
-            fetch('/delete/' + encodeURIComponent(filename), {
+            fetch(backendUrl + '/delete/' + encodeURIComponent(filename), {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-Token': csrfToken
@@ -606,17 +634,7 @@
                 .then(data => {
                     if (data.success) {
                         showMessage('File deleted successfully', 'success');
-                        // Remove file item from DOM
-                        const fileItem = document.querySelector(`[data-filename="${filename}"]`);
-                        if (fileItem) {
-                            fileItem.remove();
-                        }
-                        // Reload if no files left
-                        setTimeout(() => {
-                            if (document.querySelectorAll('.file-item').length === 0) {
-                                location.reload();
-                            }
-                        }, 500);
+                        loadFileList(); // Refresh file list after delete
                     } else {
                         showMessage('Delete failed: ' + (data.error || 'Unknown error'), 'error');
                     }
@@ -640,7 +658,7 @@
             const form = event.target;
             const formData = new FormData(form);
 
-            fetch('/change-password', {
+            fetch(backendUrl + '/change-password', {
                 method: 'POST',
                 body: formData
             })
@@ -676,13 +694,13 @@
 
         // Auto-refresh file list every 30 seconds
         setInterval(() => {
-            fetch('/api/files')
+            fetch(backendUrl + '/api/files')
                 .then(response => response.json())
                 .then(files => {
                     // Only reload if file count changed
                     const currentCount = document.querySelectorAll('.file-item').length;
                     if (files.length !== currentCount) {
-                        location.reload();
+                        loadFileList();
                     }
                 })
                 .catch(error => console.error('Error refreshing file list:', error));

@@ -1,0 +1,10 @@
+google-generativeai
+SpeechRecognition
+pyttsx3
+pyautogui
+pyperclip
+requests
+opencv-python
+pyaudio
+Pillow
+mss

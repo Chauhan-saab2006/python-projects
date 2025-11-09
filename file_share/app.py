@@ -11,7 +11,7 @@ import json
 from datetime import datetime
 from collections import defaultdict
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='frontend')
 
 # Security Configuration
 UPLOAD_FOLDER = 'uploads'
