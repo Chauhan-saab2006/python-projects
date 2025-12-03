@@ -1,14 +1,14 @@
 import time
 import sys
 
-def typewriter_print(text, char_delay=0.1):
+def typewriter_print(text, char_delay=0.06):
     """Print text like a typewriter (character by character)."""
     for ch in text:
         print(ch, end="", flush=True)
         time.sleep(char_delay)
     print()
 
-def print_song_lyrics(song_title, lyrics, char_delay=0.1, line_pause=0.1):
+def print_song_lyrics(song_title, lyrics, char_delay=0.06, line_pause=0.2):
     """Print song title and lyrics with typewriter effect."""
     print("\n" + "="*50)
     print(f"🎵 {song_title} 🎵")
@@ -24,25 +24,30 @@ def print_song_lyrics(song_title, lyrics, char_delay=0.1, line_pause=0.1):
             time.sleep(line_pause)
         else:
             print()  # Preserve empty lines for verse breaks
-            time.sleep(0.4)
+            time.sleep(0.4)              
     
     print("\n")
 
 def main():
     # Single song lyrics
-    song = """Keh doon tumhe ya chup rahu Dill mein mere 
-    aaj kyaa hai Jo bolo toh janu Guru tumko manu Chalo 
-    ye bhi waada hai Socha hai tumane ke chalte he jaaye 
-    Taaro se aage koi duniyaan basaye Sochaa hain ye ke tumhe
-    rasta bhulaye Suni jagah peh kahi chhedhe daraye Are naa
-    naa, Haaye re naa naa, Ye naa kehna Arre nahi re, 
-    nahi re, nahi re, Nahi re, nahi re, nahi re, nahi
-    re Nahi nahi"""
+    song = """Ho slow motion angreza
+              Hun kyun time ganvaye
+              Ho slow motion angreza
+              Hun kyun time ganvaye
+              Seedhe baahon mein bhar le
+              Sarsari kyun badhaye
+              Meri whiskiye, meri tharriye
+              Tu menu chadh gayi, meri soniye
+              Roko na, toko na
+              Ho mujhko peene do rajke
+              Ghul-mil ghul-mil launda ghul-mil ghul-mil
+              Ghul-mil ghul-mil launda ghul-mil ghul-mil
+              Sing!"""
 
-    song_title = "Sajde"
+    song_title = "Kya huwa teraa vada"
     
     print("\n🎶 Welcome to Typewriter Lyrics Display 🎶\n")
-    print_song_lyrics(song_title, song, char_delay=0.18, line_pause=1.2)
+    print_song_lyrics(song_title, song, char_delay=0.08, line_pause=0.4)
 
 if __name__ == "__main__":
     main()
