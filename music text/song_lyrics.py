@@ -1,14 +1,14 @@
 import time
 import sys
 
-def typewriter_print(text, char_delay=0.02):
+def typewriter_print(text, char_delay=0.1):
     """Print text like a typewriter (character by character)."""
     for ch in text:
         print(ch, end="", flush=True)
         time.sleep(char_delay)
     print()
 
-def print_song_lyrics(song_title, lyrics, char_delay=0.02, line_pause=0.5):
+def print_song_lyrics(song_title, lyrics, char_delay=0.1, line_pause=0.1):
     """Print song title and lyrics with typewriter effect."""
     print("\n" + "="*50)
     print(f"🎵 {song_title} 🎵")
@@ -24,30 +24,25 @@ def print_song_lyrics(song_title, lyrics, char_delay=0.02, line_pause=0.5):
             time.sleep(line_pause)
         else:
             print()  # Preserve empty lines for verse breaks
-            time.sleep(0.3)
+            time.sleep(0.4)
     
     print("\n")
 
 def main():
     # Single song lyrics
-    song = """Likhe jo khat tujhe
-              Woh teri yaad mein
-              Hazaaron rang ke
-              Nazaare ban gaye
-              Likhe jo khat tujhe
-              Woh teri yaad mein
-              Hazaaron rang ke
-              Nazaare ban gaye
-              Sawera jab huya
-              To phool ban gaye
-              Jo raat aayi to
-              Sitaare ban gaye
-              Likhe jo khat tujhe"""
+    song = """Keh doon tumhe ya chup rahu Dill mein mere 
+    aaj kyaa hai Jo bolo toh janu Guru tumko manu Chalo 
+    ye bhi waada hai Socha hai tumane ke chalte he jaaye 
+    Taaro se aage koi duniyaan basaye Sochaa hain ye ke tumhe
+    rasta bhulaye Suni jagah peh kahi chhedhe daraye Are naa
+    naa, Haaye re naa naa, Ye naa kehna Arre nahi re, 
+    nahi re, nahi re, Nahi re, nahi re, nahi re, nahi
+    re Nahi nahi"""
 
-    song_title = "Yesterday - sahiba"
+    song_title = "Sajde"
     
     print("\n🎶 Welcome to Typewriter Lyrics Display 🎶\n")
-    print_song_lyrics(song_title, song, char_delay=0.03, line_pause=0.4)
+    print_song_lyrics(song_title, song, char_delay=0.18, line_pause=1.2)
 
 if __name__ == "__main__":
     main()
