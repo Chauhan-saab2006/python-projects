@@ -30,12 +30,19 @@ def print_song_lyrics(song_title, lyrics, char_delay=0.02, line_pause=0.5):
 
 def main():
     # Single song lyrics
-    song = """Sajde bichhawan ve gali gali Ho gali gali, 
-    ho gali gali Jis shehar vich mera yaar vasda Kamaana 
-    painda ae khad ke, ho khad ke Ho etthe rab na koi udhar 
-    labda Ek khwaab ne aakhein kholi hain Kya mod aaya hai
-    kahani mein Woh bheeg rahi hai barish mein Hmm aur aag 
-    lagi hai paani mein"""
+    song = """Likhe jo khat tujhe
+              Woh teri yaad mein
+              Hazaaron rang ke
+              Nazaare ban gaye
+              Likhe jo khat tujhe
+              Woh teri yaad mein
+              Hazaaron rang ke
+              Nazaare ban gaye
+              Sawera jab huya
+              To phool ban gaye
+              Jo raat aayi to
+              Sitaare ban gaye
+              Likhe jo khat tujhe"""
 
     song_title = "Yesterday - sahiba"
     
