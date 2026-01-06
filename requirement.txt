@@ -1,0 +1,8 @@
+pyttsx3
+gTTS
+pyautogui
+google-generativeai
+opencv-python
+numpy
+mediapipe
+deepface
